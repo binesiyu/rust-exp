@@ -8,7 +8,7 @@ module AppDefs where
 import Control.Lens
 import Control.Monad.Reader
 import Control.Monad.State
-import Control.Monad.Trans.Either
+import Control.Monad.Trans.Except
 import Control.Concurrent.STM.TQueue
 import qualified Graphics.UI.GLFW as GLFW
 import qualified Graphics.Rendering.OpenGL as GL
@@ -44,7 +44,7 @@ makeLenses ''AppEnv
 -- Our application runs in a reader / state / either / IO transformer stack
 data ExpResult = ExpNext | ExpPrev | ExpExit
                  deriving (Show, Eq, Enum)
-type AppT m = EitherT ExpResult (StateT AppState (ReaderT AppEnv m))
+type AppT m = ExceptT ExpResult (StateT AppState (ReaderT AppEnv m))
 type AppIO = AppT IO
 
 -- Run a computation in the State monad with the current experiment as its state. Store the

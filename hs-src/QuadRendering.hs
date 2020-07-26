@@ -139,19 +139,20 @@ withQuadRenderer qrMaxQuad f =
                 szi    = sizeOf(0 :: GL.GLuint)
             bindAllocateDynamicBO qrEBO GL.ElementArrayBuffer $ numIdx * szi
             -- Create, compile and link shaders
-            r <- runExceptT . runResourceT $ do
-                     qrShdProgTex     <- tryMkShaderResource $
-                         mkShaderProgram vsSrcBasic fsSrcBasic attribLocations
-                     qrShdProgColOnly <- tryMkShaderResource $
-                         mkShaderProgram vsSrcBasic fsColOnlySrcBasic attribLocations
-                     -- Initialization done, run inner
-                     liftIO $ do
-                         disableVAOAndShaders
-                         traceOnGLError $ Just "withQuadRenderer begin inner"
-                         finally
-                             ( f $ QuadRenderer { .. } )
-                             ( traceOnGLError $ Just "withQuadRenderer after inner" )
-            either (traceAndThrow . printf "withQuadRenderer - Shader init failed:\n%s") return r
+            return undefined
+            -- r <- runExceptT . runResourceT $ do
+            --          qrShdProgTex     <- tryMkShaderResource $
+            --              mkShaderProgram vsSrcBasic fsSrcBasic attribLocations
+            --          qrShdProgColOnly <- tryMkShaderResource $
+            --              mkShaderProgram vsSrcBasic fsColOnlySrcBasic attribLocations
+            --          -- Initialization done, run inner
+            --          liftIO $ do
+            --              disableVAOAndShaders
+            --              traceOnGLError $ Just "withQuadRenderer begin inner"
+            --              finally
+            --                  ( f $ QuadRenderer { .. } )
+            --                  ( traceOnGLError $ Just "withQuadRenderer after inner" )
+            -- either (traceAndThrow . printf "withQuadRenderer - Shader init failed:\n%s") return r
 
 -- TODO: Write an Unbox instance for this and switch to an unboxed mutable vector
 data QuadRenderAttrib = QuadRenderAttrib

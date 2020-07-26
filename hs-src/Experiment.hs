@@ -1,5 +1,6 @@
 
 {-# LANGUAGE ExistentialQuantification, RankNTypes, FlexibleContexts #-}
+{-# LANGUAGE ConstrainedClassMethods #-}
 
 module Experiment ( Experiment(..)
                   , AnyExperiment(..)

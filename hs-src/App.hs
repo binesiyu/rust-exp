@@ -12,7 +12,7 @@ module App ( run
 import Control.Lens
 import Control.Monad.Reader
 import Control.Monad.State
-import Control.Monad.Trans.Either
+import Control.Monad.Trans.Except
 import Control.Monad.STM
 import Control.Monad.Trans.Control
 import Control.Concurrent.STM.TQueue
@@ -62,8 +62,8 @@ processGLFWEvent ev = do
                                       . printf "Screenshot-%s.png" =<< show <$> getZonedTime
                 GLFW.Key'V     -> asVSync %= not >> setVSync
                                   -- Exit and switch to a different experiment
-                GLFW.Key'Minus -> onRenderSettingsChage >> left ExpPrev
-                GLFW.Key'Equal -> onRenderSettingsChage >> left ExpNext
+                -- GLFW.Key'Minus -> onRenderSettingsChage >> throwError ExpPrev
+                -- GLFW.Key'Equal -> onRenderSettingsChage >> throwError ExpNext
                 _              -> return ()
         GLFWEventFramebufferSize _win _w _h -> resize
         _ -> return ()
@@ -164,7 +164,7 @@ run env st =
         experimentLoop expIdx = do
             -- We use the either to break out of the current experiment, and either exit
             -- or switch to a different one
-            r <- runEitherT $ do
+            r <- runExceptT $ do
                 -- Because of the existential type we have to call withExperiment from
                 -- inside the lambda where we pattern match it out of the AnyWithExperiment.
                 -- Also use monad-control to bring our stack across the IO of withExperiment
